@@ -79,6 +79,61 @@
   white-space: nowrap;
 }
 
+.chartHeader > :first-child {
+  flex: 1 1 290px;
+}
+
+.chartHeaderRight {
+  display: flex;
+  flex: 1 1 430px;
+  align-items: flex-start;
+  justify-content: flex-end;
+  gap: 10px;
+  min-width: 0;
+}
+
+.chartBudgetSummary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 7px;
+  width: min(100%, 385px);
+}
+
+.chartBudgetSummary > div {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+  padding: 8px 9px;
+  border: 1px solid #e1e9ed;
+  border-radius: 9px;
+  background: #f7fafb;
+}
+
+.chartBudgetSummary span {
+  color: #526174;
+  font-size: 10px;
+  line-height: 1.2;
+}
+
+.chartBudgetSummary strong {
+  color: #15202b;
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 700px) {
+  .chartHeaderRight {
+    flex-basis: 100%;
+    flex-wrap: wrap-reverse;
+    justify-content: flex-start;
+  }
+
+  .chartBudgetSummary {
+    width: 100%;
+  }
+}
+
 .chartToolbar {
   display: grid;
   grid-template-columns: minmax(190px, 240px) minmax(0, 1fr);
@@ -247,6 +302,382 @@
     transparent 1px
   );
   background-size: 25% 100%;
+}
+
+.stackButton {
+  display: block;
+  padding: 0;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  text-align: inherit;
+}
+
+.stackButton:hover {
+  filter: brightness(1.08);
+}
+
+.stackButton:focus-visible {
+  outline: 3px solid #123e71;
+  outline-offset: 3px;
+}
+
+.dayDialog {
+  width: min(960px, calc(100vw - 32px));
+  max-height: min(85vh, 850px);
+  margin: auto;
+  padding: 0;
+  border: 1px solid #dce5eb;
+  border-radius: 15px;
+  background: #fff;
+  color: #15202b;
+  box-shadow: 0 20px 70px #14223550;
+}
+
+.travelDateSection {
+  margin: 16px 0;
+  padding: 12px;
+  border: 1px solid #dce5eb;
+  border-radius: 9px;
+  background: #f7fafb;
+}
+
+.travelDateToggle {
+  padding: 6px 10px;
+  border: 1px solid #cbd7e1;
+  border-radius: 7px;
+  background: #fff;
+  color: #244664;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.travelDateEditor {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.travelDateFields {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.travelDateFields label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  color: #405166;
+  font-size: 12px;
+}
+
+.travelDateFields input {
+  padding: 7px;
+  border: 1px solid #cbd7e1;
+  border-radius: 6px;
+}
+
+.travelCalendar {
+  --cell-size: 34px;
+  --cell-radius: 6px;
+  padding: 10px;
+  border: 1px solid #dce5eb;
+  border-radius: 9px;
+  background: #fff;
+}
+
+.travelCalendar .previousTripDay button {
+  background: #e8f5ed;
+  color: #176c3c;
+}
+
+.travelCalendar :global(button[data-range-start="true"]),
+.travelCalendar :global(button[data-range-end="true"]),
+.travelCalendar :global(button[data-selected-single="true"]) {
+  background: #007a32;
+  color: #fff;
+  font-weight: 700;
+}
+
+.travelCalendar :global(button[data-range-middle="true"]) {
+  border-radius: 0;
+  background: #ccebd7;
+  color: #124b2a;
+  font-weight: 700;
+}
+
+.travelCalendar :global(button[data-range-start="true"]:hover),
+.travelCalendar :global(button[data-range-end="true"]:hover),
+.travelCalendar :global(button[data-range-middle="true"]:hover) {
+  background: #005d26;
+  color: #fff;
+}
+
+.travelDateEditor > p {
+  flex-basis: 100%;
+  margin: 0;
+  color: #526174;
+  font-size: 12px;
+}
+
+.travelDateEditor > button {
+  padding: 8px 12px;
+  border: 0;
+  border-radius: 6px;
+  background: #176c3c;
+  color: #fff;
+  cursor: pointer;
+}
+
+.travelDateEditor > button:disabled {
+  opacity: .55;
+  cursor: not-allowed;
+}
+
+.travelDateError {
+  color: #a62c2c;
+  font-size: 12px;
+}
+
+.dayDialog::backdrop {
+  background: #0c1d30a8;
+}
+
+.dayDialogContent {
+  padding: 22px;
+}
+
+.dayDialogHeader,
+.dayDialogTotal {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.dayDialogHeader h2 {
+  margin: 0 0 5px;
+  font-size: 20px;
+}
+
+.dayDialogHeader p {
+  margin: 0;
+  color: #66768a;
+  font-size: 12px;
+}
+
+.dayDialogChart {
+  margin-top: 20px;
+  padding: 14px;
+  border: 1px solid #dce5eb;
+  border-radius: 9px;
+  background: #f7fafb;
+}
+
+.dayDialogChart > strong {
+  font-size: 13px;
+}
+
+.dayDialogCategories {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  margin: 12px 0;
+  padding: 0;
+  list-style: none;
+}
+
+.dayDialogCategories li {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #405166;
+  font-size: 11px;
+}
+
+.dayDialogStackScroll {
+  overflow-x: auto;
+}
+
+.dayDialogStack {
+  display: flex;
+  width: max-content;
+  min-width: 100%;
+  min-height: 58px;
+  border-radius: 5px;
+}
+
+.dayDialogStack > span {
+  display: flex;
+  flex: 0 0 auto;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  min-width: 0;
+  padding: 7px;
+  color: #fff;
+  text-align: center;
+  font-size: 11px;
+}
+
+.dayDialogStack > span > span {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+
+.dayDialogStack > span > small {
+  font-size: 10px;
+}
+
+.dayDialogStack > span + span {
+  border-left: 1px solid #ffffffaa;
+}
+
+.chartBudgetSummary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 9px;
+  margin-top: 18px;
+}
+
+.chartBudgetSummary > div {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  min-width: 0;
+  padding: 11px;
+  border-radius: 9px;
+  background: #f1f6f8;
+}
+
+.chartBudgetSummary span {
+  color: #526174;
+  font-size: 10px;
+  line-height: 1.3;
+}
+
+.chartBudgetSummary strong {
+  color: #15202b;
+  font-size: 15px;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 420px) {
+  .chartBudgetSummary {
+    grid-template-columns: 1fr;
+  }
+}
+
+.dayDialogClose {
+  width: 32px;
+  height: 32px;
+  flex: 0 0 32px;
+  border: 0;
+  border-radius: 7px;
+  background: #eef3f6;
+  color: #24384a;
+  cursor: pointer;
+  font-size: 23px;
+  line-height: 1;
+}
+
+.dayDialogList {
+  margin: 20px 0;
+  padding: 0;
+  list-style: none;
+}
+
+.dayDialogList li {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 11px 0;
+  border-bottom: 1px solid #e8edf1;
+}
+
+.dayDialogList li > div {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.dayDialogList li strong,
+.dayDialogTotal strong {
+  font-size: 13px;
+}
+
+.dayDialogList li small {
+  color: #66768a;
+  font-size: 11px;
+}
+
+.dayDialogList li b {
+  white-space: nowrap;
+  font-size: 13px;
+}
+
+.dayDialogList li > .dayDialogActions,
+.dayDialogList li > .dayDialogEdit {
+  display: flex;
+  flex: 0 0 auto;
+  flex-direction: row;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.dayDialogActions button,
+.dayDialogEdit button {
+  padding: 5px 8px;
+  border: 1px solid #cbd7e1;
+  border-radius: 5px;
+  background: #fff;
+  color: #244664;
+  cursor: pointer;
+  font-size: 11px;
+}
+
+.dayDialogActions button:hover,
+.dayDialogEdit button:hover {
+  background: #eaf2f7;
+}
+
+.dayDialogEdit label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+}
+
+.dayDialogEdit input {
+  width: 90px;
+  padding: 5px;
+  border: 1px solid #cbd7e1;
+  border-radius: 5px;
+}
+
+@media (max-width: 600px) {
+  .dayDialogList li {
+    flex-wrap: wrap;
+  }
+
+  .dayDialogList li > .dayDialogActions,
+  .dayDialogList li > .dayDialogEdit {
+    flex-basis: 100%;
+    margin-left: 23px;
+  }
+}
+
+.dayDialogTotal {
+  padding-top: 4px;
 }
 
 .dailyChartRow .barTrack {

@@ -22,6 +22,7 @@ type RecommendationPreviewProps = {
   onResult: (key: string, result: RecommendationResponse) => void;
   onReady: (ready: boolean) => void;
   onOpenDestination: (row: TravelCountryRecord) => void;
+  onDatesApplied: (start: string, end: string, result: RecommendationResponse) => void;
 };
 
 export function RecommendationPreview({
@@ -31,6 +32,7 @@ export function RecommendationPreview({
   onResult,
   onReady,
   onOpenDestination,
+  onDatesApplied,
 }: RecommendationPreviewProps) {
   const [result, setResult] =
     useState<RecommendationResponse | null>(cachedResult);
@@ -324,6 +326,7 @@ export function RecommendationPreview({
             plan={plan}
             recommendations={result}
             onOpenDestination={onOpenDestination}
+            onDatesApplied={onDatesApplied}
           />
         </>
       )}

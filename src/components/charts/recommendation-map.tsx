@@ -72,9 +72,13 @@ function fitView(points: { latitude: number; longitude: number }[], size: Size):
 export function RecommendationMap({
   recommendations,
   onOpen,
+  selectedRank,
+  onSelectedRankChange,
 }: {
   recommendations: RecommendationResponse;
   onOpen: (row: TravelCountryRecord) => void;
+  selectedRank: number;
+  onSelectedRankChange: (rank: number) => void;
 }) {
   const items = recommendations.top10.filter(item =>
     Number.isFinite(item.accommodation.latitude) &&
@@ -87,7 +91,6 @@ export function RecommendationMap({
     longitude: items[0]?.accommodation.longitude ?? 0,
     zoom: 3,
   });
-  const [selectedRank, setSelectedRank] = useState(items[0]?.rank ?? 1);
   const [hoveredRank, setHoveredRank] = useState<number | null>(null);
 
   useEffect(() => {
@@ -106,7 +109,6 @@ export function RecommendationMap({
   useEffect(() => {
     if (items.length === 0) return;
     setView(fitView(items.map(item => item.accommodation), size));
-    setSelectedRank(items[0].rank);
     setHoveredRank(null);
     // Fit the points after the map has measured its actual width and height.
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -166,7 +168,7 @@ export function RecommendationMap({
   function focus(rank: number) {
     const target = items.find(item => item.rank === rank);
     if (!target) return;
-    setSelectedRank(rank);
+    onSelectedRankChange(rank);
     setHoveredRank(null);
     setView({
       latitude: target.accommodation.latitude,

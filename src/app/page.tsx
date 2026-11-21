@@ -85,6 +85,13 @@ export default function Home() {
     }
   }, []);
 
+  function applyRecommendationDates(start: string, end: string, result: RecommendationResponse) {
+    const nextPlan = { ...plan, checkIn: start, checkOut: end };
+    update("checkIn", start);
+    update("checkOut", end);
+    saveRecommendation(recommendationInputKey(nextPlan), result);
+  }
+
   useEffect(() => {
     if (cachedRecommendation) return;
     try {
@@ -275,6 +282,7 @@ export default function Home() {
             onResult={saveRecommendation}
             onReady={setRecommendationPreviewReady}
             onOpenDestination={openDestination}
+            onDatesApplied={applyRecommendationDates}
           />
         );
 

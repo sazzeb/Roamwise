@@ -4,10 +4,12 @@
 import { useState } from "react";
 
 import { MapPin } from "lucide-react";
+import { addDays, format, parseISO } from "date-fns";
 import { DailyTravelPriceChart } from "./daily-travel-price-chart";
 import { RecommendationMap } from "./recommendation-map";
 import type {
   RecommendationResponse,
+  RecommendationItinerary,
   TravelPlan,
 } from "@/types/travel";
 
@@ -26,7 +28,22 @@ type OverviewProps = {
   plan: TravelPlan;
   recommendations?: RecommendationResponse;
   onOpenDestination: (row: TravelCountryRecord) => void;
+  onDatesApplied?: (start: string, end: string, result: RecommendationResponse) => void;
 };
+
+function trimRecommendation(item: RecommendationItinerary, start: string, end: string): RecommendationItinerary {
+  const days = item.days.filter(day => day.date >= start && day.date < end);
+  const accommodationCost = item.accommodationCost / Math.max(1, item.days.length) * days.length;
+  const activityCost = days.reduce((sum, day) => sum + day.activityCost, 0);
+  const foodCost = days.reduce((sum, day) => sum + day.foodCost, 0);
+  const localTransportCost = days.reduce((sum, day) => sum + day.localTransportCost, 0);
+  const totalCost = accommodationCost + activityCost + foodCost + localTransportCost + item.transportCost;
+  return { ...item, days, nights: days.length, accommodationCost, activityCost, foodCost,
+    localTransportCost, totalCost, remainingBudget: item.budget - totalCost,
+    budgetFitPercentage: item.budget > 0 ? Math.max(0, 100 - Math.abs(totalCost - item.budget) / item.budget * 100) : 0,
+    activities: days.flatMap(day => day.activities),
+    unpricedActivityCount: days.reduce((sum, day) => sum + day.activityCosts.filter(cost => cost === null).length, 0) };
+}
 
 const POSITIONS = [
   { left: 18, top: 24 },
@@ -180,6 +197,7 @@ export function DestinationOverview({
   plan,
   recommendations,
   onOpenDestination,
+  onDatesApplied,
 }: OverviewProps) {
   const {
     records,
@@ -192,6 +210,69 @@ export function DestinationOverview({
       plan.countries[0] ||
         "Spain"
     );
+  const [originalRecommendations] = useState(recommendations);
+  const [originalDates] = useState(() => ({
+    start: plan.checkIn || recommendations?.top10[0]?.days[0]?.date || "",
+    end: plan.checkOut || (recommendations?.top10[0]?.days.at(-1)?.date
+      ? format(addDays(parseISO(recommendations.top10[0].days.at(-1)!.date), 1), "yyyy-MM-dd") : ""),
+  }));
+  const [selectedRank, setSelectedRank] = useState(recommendations?.top10[0]?.rank ?? 1);
+  const [dateRange, setDateRange] = useState<{ start: string; end: string } | null>(null);
+  const [generated, setGenerated] = useState<RecommendationResponse | null>(null);
+  const [dateLoading, setDateLoading] = useState(false);
+  const [dateError, setDateError] = useState("");
+  const originalStart = originalDates.start;
+  const originalEnd = originalDates.end;
+  const withinOriginal = Boolean(dateRange && dateRange.start >= originalStart && dateRange.end <= originalEnd);
+  const activeRecommendations = generated ?? (withinOriginal && originalRecommendations && dateRange ? {
+    ...originalRecommendations,
+    top10: originalRecommendations.top10.map(item => trimRecommendation(item, dateRange.start, dateRange.end)),
+    firstRecommendation: originalRecommendations?.firstRecommendation
+      ? trimRecommendation(originalRecommendations.firstRecommendation, dateRange.start, dateRange.end) : null,
+  } : recommendations);
+  const activeRank = activeRecommendations?.top10.some(item => item.rank === selectedRank)
+    ? selectedRank
+    : activeRecommendations?.top10[0]?.rank ?? 1;
+
+  async function applyDates(start: string, end: string) {
+    if (!originalStart || !originalEnd || start >= end) return;
+    setDateError("");
+    if (start >= originalStart && end <= originalEnd) {
+      if (!originalRecommendations) return;
+      const trimmed = {
+        ...originalRecommendations,
+        top10: originalRecommendations.top10.map(item => trimRecommendation(item, start, end)),
+        firstRecommendation: originalRecommendations.firstRecommendation
+          ? trimRecommendation(originalRecommendations.firstRecommendation, start, end) : null,
+      };
+      setGenerated(null);
+      setDateRange({ start, end });
+      onDatesApplied?.(start, end, trimmed);
+      return;
+    }
+    setDateLoading(true);
+    try {
+      const response = await fetch("/api/recommendations", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ plan: { ...plan, checkIn: start, checkOut: end } }),
+      });
+      if (!response.ok) throw new Error(`Recommendation request failed (${response.status}).`);
+      const payload = await response.text();
+      const events = payload.trim().split("\n").map(line => JSON.parse(line) as {
+        type: string; result?: RecommendationResponse; message?: string;
+      });
+      const result = events.findLast(event => event.type === "result")?.result;
+      if (!result?.top10.length) throw new Error(events.findLast(event => event.type === "error")?.message || "No recommendations returned for those dates.");
+      setGenerated(result);
+      setDateRange({ start, end });
+      setSelectedRank(result.top10[0]?.rank ?? 1);
+      onDatesApplied?.(start, end, result);
+    } catch (error) {
+      setDateError(error instanceof Error ? error.message : "Could not update travel dates.");
+    } finally {
+      setDateLoading(false);
+    }
+  }
 
   const available = [
     ...new Set(
@@ -268,11 +349,16 @@ export function DestinationOverview({
         </p>
       )}
 
-      {recommendations && (
+      {activeRecommendations && (
         <>
-          <DailyTravelPriceChart recommendations={recommendations} />
+          <DailyTravelPriceChart recommendations={activeRecommendations}
+            selectedRank={activeRank} onSelectedRankChange={setSelectedRank}
+            travelStart={dateRange?.start || originalStart} travelEnd={dateRange?.end || originalEnd}
+            onTravelDatesChange={applyDates} datesLoading={dateLoading} datesError={dateError} />
           <RecommendationMap
-            recommendations={recommendations}
+            recommendations={activeRecommendations}
+            selectedRank={activeRank}
+            onSelectedRankChange={setSelectedRank}
             onOpen={onOpenDestination}
           />
         </>
