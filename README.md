@@ -1,6 +1,6 @@
-# TravelWise
+# Roamwise
 
-TravelWise is a Next.js travel-planning application with bundled CSV datasets
+Roamwise is a Next.js travel-planning application with bundled CSV datasets
 and a server-side recommendation API.
 
 ## Run locally
@@ -37,6 +37,9 @@ from Vercel deployments by `.vercelignore`. The Next.js recommendation API fetch
 copies from object storage, so complete source rows remain available. The
 smaller `public/datasets/travel_countries.csv` stays in the deployment because
 the browser uses it.
+
+The Blob storage path retains the legacy `travelwise-v1` prefix so existing
+uploaded datasets and `TRAVEL_DATA_BASE_URL` continue to work after the rename.
 
 1. Create a **public** Vercel Blob store and connect it to this project.
 2. Install and sign in to the Vercel CLI, then link this repository with

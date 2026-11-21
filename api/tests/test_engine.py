@@ -1,5 +1,8 @@
 import csv
+import os
 from pathlib import Path
+
+import pytest
 
 from api.engine import RecommendationEngine
 from api.models import TravelPlan
@@ -69,7 +72,10 @@ def test_engine_returns_budget_ranked_complete_itineraries(
             }
         ],
     )
-    store = TravelDataStore(tmp_path / "index.sqlite")
+    database_url = os.getenv("TEST_DATABASE_URL")
+    if not database_url:
+        pytest.skip("Set TEST_DATABASE_URL to run the PostgreSQL integration test")
+    store = TravelDataStore(database_url)
     store.rebuild(data)
     result = RecommendationEngine(store).recommend(
         TravelPlan(

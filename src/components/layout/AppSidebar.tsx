@@ -23,7 +23,7 @@ export function AppSidebar({
 
   return (
     <aside
-      id="travelwise-step-navigation"
+      id="roamwise-step-navigation"
       className="step-sidebar sidebar-panel"
       aria-label="Travel planner steps"
     >

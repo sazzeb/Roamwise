@@ -38,7 +38,8 @@ import {
 } from "@/data/travel-catalog";
 import type { RecommendationResponse, TravelPlan } from "@/types/travel";
 
-const RECOMMENDATION_CACHE_KEY = "travelwise-recommendations-v1";
+const RECOMMENDATION_CACHE_KEY = "roamwise-recommendations-v1";
+const LEGACY_RECOMMENDATION_CACHE_KEY = "travelwise-recommendations-v1";
 
 function recommendationInputKey(plan: TravelPlan): string {
   return JSON.stringify({
@@ -95,7 +96,8 @@ export default function Home() {
   useEffect(() => {
     if (cachedRecommendation) return;
     try {
-      const saved = window.sessionStorage.getItem(RECOMMENDATION_CACHE_KEY);
+      const saved = window.sessionStorage.getItem(RECOMMENDATION_CACHE_KEY)
+        ?? window.sessionStorage.getItem(LEGACY_RECOMMENDATION_CACHE_KEY);
       if (!saved) return;
       const parsed = JSON.parse(saved) as {
         key: string;

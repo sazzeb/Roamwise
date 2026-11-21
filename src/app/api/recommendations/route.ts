@@ -82,7 +82,7 @@ export async function POST(request: Request) {
     });
   } catch (error) {
     console.error(
-      "[TravelWise] Recommendation generation failed",
+      "[Roamwise] Recommendation generation failed",
       error
     );
 

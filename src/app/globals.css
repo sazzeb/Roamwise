@@ -107,6 +107,19 @@ p {
   color: var(--green);
 }
 
+.unt-logo-frame {
+  display: flex;
+  align-items: center;
+  padding-right: 11px;
+  border-right: 1px solid var(--line);
+}
+
+.unt-logo {
+  display: block;
+  width: 82px;
+  height: auto;
+}
+
 .desktop-nav {
   display: flex;
   gap: 30px;

@@ -6222,6 +6222,44 @@ __metadata:
   languageName: node
   linkType: hard
 
+"roamwise@workspace:.":
+  version: 0.0.0-use.local
+  resolution: "roamwise@workspace:."
+  dependencies:
+    "@base-ui/react": "npm:^1.9.0"
+    "@tailwindcss/postcss": "npm:^4.3.5"
+    "@tailwindcss/turbopack": "npm:^4.3.5"
+    "@types/d3": "npm:^7.4.3"
+    "@types/node": "npm:^26.6.6"
+    "@types/papaparse": "npm:^5.5.2"
+    "@types/react": "npm:^19.3.0"
+    "@types/react-dom": "npm:^19.3.0"
+    class-variance-authority: "npm:^0.7.1"
+    clsx: "npm:^2.1.1"
+    cn: "npm:^0.5.2"
+    d3: "npm:^7.9.2"
+    date-fns: "npm:^4.4.0"
+    echarts: "npm:^6.1.0"
+    echarts-for-react: "npm:^3.1.0"
+    eslint: "npm:9.39.5"
+    eslint-config-next: "npm:^16.4.6"
+    lucide-react: "npm:^1.77.0"
+    motion: "npm:^14.14.0"
+    next: "npm:^16.4.6"
+    papaparse: "npm:^5.7.1"
+    postcss: "npm:^8.5.33"
+    react: "npm:^19.3.1"
+    react-day-picker: "npm:^10.0.2"
+    react-dom: "npm:^19.3.1"
+    sass: "npm:^1.108.2"
+    shadcn: "npm:^4.23.0"
+    tailwind-merge: "npm:^3.7.1"
+    tailwindcss: "npm:^4.3.5"
+    tw-animate-css: "npm:^1.4.0"
+    typescript: "npm:6.0.3"
+  languageName: unknown
+  linkType: soft
+
 "robust-predicates@npm:^3.0.2":
   version: 3.0.3
   resolution: "robust-predicates@npm:3.0.3"
@@ -6901,44 +6939,6 @@ __metadata:
   checksum: 10c0/487988b0a19c654ff3e1961b87f471702e708fa8a8dd02a298ef16da7206692e8552a0250e8b3e8759270f62e9d8314616f6da274734d3b558b1fc7b7724e892
   languageName: node
   linkType: hard
-
-"travelwise@workspace:.":
-  version: 0.0.0-use.local
-  resolution: "travelwise@workspace:."
-  dependencies:
-    "@base-ui/react": "npm:^1.9.0"
-    "@tailwindcss/postcss": "npm:^4.3.5"
-    "@tailwindcss/turbopack": "npm:^4.3.5"
-    "@types/d3": "npm:^7.4.3"
-    "@types/node": "npm:^26.6.6"
-    "@types/papaparse": "npm:^5.5.2"
-    "@types/react": "npm:^19.3.0"
-    "@types/react-dom": "npm:^19.3.0"
-    class-variance-authority: "npm:^0.7.1"
-    clsx: "npm:^2.1.1"
-    cn: "npm:^0.5.2"
-    d3: "npm:^7.9.2"
-    date-fns: "npm:^4.4.0"
-    echarts: "npm:^6.1.0"
-    echarts-for-react: "npm:^3.1.0"
-    eslint: "npm:9.39.5"
-    eslint-config-next: "npm:^16.4.6"
-    lucide-react: "npm:^1.77.0"
-    motion: "npm:^14.14.0"
-    next: "npm:^16.4.6"
-    papaparse: "npm:^5.7.1"
-    postcss: "npm:^8.5.33"
-    react: "npm:^19.3.1"
-    react-day-picker: "npm:^10.0.2"
-    react-dom: "npm:^19.3.1"
-    sass: "npm:^1.108.2"
-    shadcn: "npm:^4.23.0"
-    tailwind-merge: "npm:^3.7.1"
-    tailwindcss: "npm:^4.3.5"
-    tw-animate-css: "npm:^1.4.0"
-    typescript: "npm:6.0.3"
-  languageName: unknown
-  linkType: soft
 
 "ts-api-utils@npm:^2.5.0":
   version: 2.5.0

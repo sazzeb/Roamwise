@@ -4,7 +4,10 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 from pathlib import Path
+
+from dotenv import load_dotenv
 
 from .engine import RecommendationEngine
 from .models import TravelPlan
@@ -12,15 +15,19 @@ from .store import TravelDataStore
 
 
 def main() -> int:
+    load_dotenv(Path(__file__).resolve().parent.parent / ".env")
     parser = argparse.ArgumentParser()
     parser.add_argument("--data-dir", required=True)
-    parser.add_argument("--database", default=".travelwise/recommendations.sqlite")
+    parser.add_argument("--database-url", default=os.getenv("DATABASE_URL"))
     parser.add_argument("--plan", required=False)
     parser.add_argument("--output", required=False)
     parser.add_argument("--build-index-only", action="store_true")
     args = parser.parse_args()
 
-    store = TravelDataStore(args.database)
+    if not args.database_url:
+        parser.error("Set DATABASE_URL in the root .env or pass --database-url")
+
+    store = TravelDataStore(args.database_url)
     counts = store.rebuild(
         args.data_dir,
         progress=lambda percent, message: print(

@@ -2,13 +2,13 @@
 "use client";
 
 import {
-  Compass,
   Menu,
   PanelLeftClose,
   PanelLeftOpen,
   UserRound,
   X,
 } from "lucide-react";
+import Image from "next/image";
 
 import {
   PRIMARY_NAVIGATION,
@@ -48,20 +48,17 @@ export function AppHeader({
             className="brand"
             type="button"
             onClick={() => onNavigate(1)}
-            aria-label="TravelWise homepage"
+            aria-label="Roamwise homepage"
           >
-            <span className="brand-mark">
-              <Compass
-                size={24}
-                strokeWidth={2.7}
-                aria-hidden="true"
-              />
+            <span className="unt-logo-frame">
+              <Image className="unt-logo" src="/unt-logo.svg" width={235} height={107}
+                alt="University of North Texas" unoptimized />
             </span>
 
             <span>
-              Travel
+              Roam
               <span className="brand-green">
-                Wise
+                wise
               </span>
             </span>
           </button>
@@ -74,7 +71,7 @@ export function AppHeader({
                 : ""
             }`}
             aria-expanded={sidebarOpen}
-            aria-controls="travelwise-step-navigation"
+            aria-controls="roamwise-step-navigation"
             aria-label={
               sidebarOpen
                 ? "Hide step navigation"
@@ -162,7 +159,7 @@ export function AppHeader({
 
         {profileOpen && (
           <div className="profile-popover">
-            <b>TravelWise preview</b>
+            <b>Roamwise preview</b>
 
             <p>
               Preferences are stored on this device.

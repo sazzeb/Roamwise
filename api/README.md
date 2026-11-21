@@ -1,7 +1,7 @@
-# TravelWise recommendation engine
+# Roamwise recommendation engine
 
 This package prepares the CSV files in `public/datasets/csv_file` into a
-SQLite index and calculates complete trip recommendations.
+PostgreSQL index and calculates complete trip recommendations.
 
 The engine considers:
 
@@ -25,6 +25,11 @@ destination.
 
 From the repository root:
 
+Install the package with `python3 -m pip install -e ./api`, then set
+`DATABASE_URL` in the root `.env` to your PostgreSQL connection URL. Create
+the database before running the importer. The import replaces the existing
+`records` and `sources` tables' contents, so use a dedicated database.
+
 ```bash
 python3 -m api.cli \
   --data-dir public/datasets/csv_file \
@@ -32,13 +37,14 @@ python3 -m api.cli \
   --output recommendations.json
 ```
 
-Build only the SQLite index:
+Build only the PostgreSQL index:
 
 ```bash
 python3 -m api.cli \
   --data-dir public/datasets/csv_file \
-  --database .travelwise/recommendations.sqlite \
   --build-index-only
 ```
 
-The implementation uses only the Python standard library.
+Use `--database-url` to override `.env`. For integration tests, set
+`TEST_DATABASE_URL` to a dedicated disposable PostgreSQL database; the test
+rebuilds its tables and replaces their contents.

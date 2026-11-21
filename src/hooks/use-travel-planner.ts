@@ -19,7 +19,8 @@ import {
   normalizeStep,
 } from "@/features/planner/planner.config";
 
-const STORAGE_KEY = "travelwise-plan-v6";
+const STORAGE_KEY = "roamwise-plan-v6";
+const LEGACY_STORAGE_KEY = "travelwise-plan-v6";
 
 const MIN_INDIVIDUAL_BUDGET = 0;
 
@@ -146,7 +147,7 @@ export function useTravelPlanner() {
   useEffect(() => {
     const saved = BrowserStorage.read<
       Partial<TravelPlan>
-    >(STORAGE_KEY);
+    >(STORAGE_KEY) ?? BrowserStorage.read<Partial<TravelPlan>>(LEGACY_STORAGE_KEY);
 
     if (saved && typeof saved === "object") {
       setPlan(normalizePlan(saved));
@@ -213,6 +214,7 @@ export function useTravelPlanner() {
   const reset = useCallback(() => {
     setPlan(INITIAL_PLAN);
     BrowserStorage.remove(STORAGE_KEY);
+    BrowserStorage.remove(LEGACY_STORAGE_KEY);
   }, []);
 
   return {

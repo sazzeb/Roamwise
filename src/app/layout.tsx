@@ -6,7 +6,7 @@ import "./globals.css";
 import "@/styles/main.scss";
 
 export const metadata: Metadata = {
-  title: "TravelWise | Discover Your Next Journey",
+  title: "Roamwise | Discover Your Next Journey",
   description:
     "Explore destinations, compare travel budgets, and plan memorable experiences with visual insights.",
 };

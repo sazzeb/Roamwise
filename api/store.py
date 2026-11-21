@@ -1,12 +1,14 @@
-"""SQLite-backed CSV ingestion and indexed record access."""
+"""PostgreSQL-backed CSV ingestion and indexed record access."""
 
 from __future__ import annotations
 
 import csv
 import json
-import sqlite3
 from pathlib import Path
 from typing import Callable, Iterable
+
+import psycopg
+from psycopg.rows import dict_row
 
 from .models import SourceRecord
 from .normalize import json_row, to_source_record
@@ -15,23 +17,22 @@ Progress = Callable[[int, str], None]
 
 
 class TravelDataStore:
-    """Build and query a compact SQLite index of all CSV datasets."""
+    """Build and query a PostgreSQL index of all CSV datasets."""
 
-    def __init__(self, database: str | Path):
-        self.database = Path(database)
-        self.database.parent.mkdir(parents=True, exist_ok=True)
+    def __init__(self, database_url: str):
+        if not database_url.startswith(("postgresql://", "postgres://")):
+            raise ValueError("A PostgreSQL DATABASE_URL is required")
+        self.database_url = database_url
 
-    def connection(self) -> sqlite3.Connection:
-        connection = sqlite3.connect(self.database)
-        connection.row_factory = sqlite3.Row
-        return connection
+    def connection(self) -> psycopg.Connection:
+        return psycopg.connect(self.database_url, row_factory=dict_row)
 
     def initialize(self) -> None:
         with self.connection() as connection:
-            connection.executescript(
+            connection.execute(
                 """
                 CREATE TABLE IF NOT EXISTS records (
-                    id INTEGER PRIMARY KEY,
+                    id BIGSERIAL PRIMARY KEY,
                     source TEXT NOT NULL,
                     row_number INTEGER NOT NULL,
                     name TEXT NOT NULL,
@@ -39,14 +40,14 @@ class TravelDataStore:
                     country TEXT NOT NULL,
                     state TEXT NOT NULL,
                     city TEXT NOT NULL,
-                    latitude REAL,
-                    longitude REAL,
+                    latitude DOUBLE PRECISION,
+                    longitude DOUBLE PRECISION,
                     search_text TEXT NOT NULL,
                     source_row TEXT NOT NULL
                 );
                 CREATE TABLE IF NOT EXISTS sources (
                     source TEXT PRIMARY KEY,
-                    row_count INTEGER NOT NULL
+                    row_count BIGINT NOT NULL
                 );
                 CREATE INDEX IF NOT EXISTS idx_records_country
                     ON records(country);
@@ -72,13 +73,12 @@ class TravelDataStore:
         self.initialize()
         counts: dict[str, int] = {}
         with self.connection() as connection:
-            connection.execute("DELETE FROM records")
-            connection.execute("DELETE FROM sources")
+            connection.execute("TRUNCATE TABLE records, sources RESTART IDENTITY")
             for index, file in enumerate(files):
                 count = self._ingest_file(connection, file)
                 counts[file.name] = count
                 connection.execute(
-                    "INSERT INTO sources(source, row_count) VALUES (?, ?)",
+                    "INSERT INTO sources(source, row_count) VALUES (%s, %s)",
                     (file.name, count),
                 )
                 if progress:
@@ -90,10 +90,18 @@ class TravelDataStore:
 
     def _ingest_file(
         self,
-        connection: sqlite3.Connection,
+        connection: psycopg.Connection,
         file: Path,
     ) -> int:
         count = 0
+        insert_sql = """
+            INSERT INTO records(
+                source, row_number, name, record_type,
+                country, state, city, latitude, longitude,
+                search_text, source_row
+            ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+        """
+        batch: list[tuple[object, ...]] = []
         with file.open("r", encoding="utf-8-sig", newline="") as handle:
             reader = csv.DictReader(handle)
             for row_number, row in enumerate(reader, start=2):
@@ -105,14 +113,7 @@ class TravelDataStore:
                 if not any(clean.values()):
                     continue
                 record = to_source_record(file.name, row_number, clean)
-                connection.execute(
-                    """
-                    INSERT INTO records(
-                        source, row_number, name, record_type,
-                        country, state, city, latitude, longitude,
-                        search_text, source_row
-                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                    """,
+                batch.append(
                     (
                         record.source,
                         record.row_number,
@@ -125,9 +126,16 @@ class TravelDataStore:
                         record.longitude,
                         record.search_text,
                         json_row(record.row),
-                    ),
+                    )
                 )
                 count += 1
+                if len(batch) >= 1000:
+                    with connection.cursor() as cursor:
+                        cursor.executemany(insert_sql, batch)
+                    batch.clear()
+        if batch:
+            with connection.cursor() as cursor:
+                cursor.executemany(insert_sql, batch)
         return count
 
     def all_sources(self) -> list[str]:
