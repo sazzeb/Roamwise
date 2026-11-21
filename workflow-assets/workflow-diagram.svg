@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1100" viewBox="0 0 1200 1100" role="img" aria-labelledby="title desc">
+  <title id="title">Roamwise user workflow</title>
+  <desc id="desc">Traveler inputs lead to recommendations, data visualization, daily price comparison, and date or price refinements.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 Z" fill="#007a32"/>
+    </marker>
+  </defs>
+  <g fill="none" stroke="#007a32" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="320" y="448" width="400" height="620" stroke-width="1.5"/>
+    <rect x="845" y="18" width="135" height="78"/>
+    <rect x="845" y="145" width="135" height="54"/>
+    <rect x="500" y="130" width="135" height="78"/>
+    <rect x="500" y="245" width="135" height="78"/>
+    <rect x="500" y="357" width="135" height="65"/>
+    <rect x="420" y="480" width="135" height="78"/>
+    <rect x="140" y="590" width="135" height="66"/>
+    <rect x="470" y="690" width="135" height="78"/>
+    <rect x="140" y="845" width="135" height="66"/>
+    <rect x="375" y="825" width="135" height="78"/>
+    <rect x="545" y="825" width="135" height="78"/>
+    <rect x="745" y="825" width="135" height="78"/>
+    <rect x="745" y="930" width="135" height="96"/>
+    <rect x="915" y="930" width="135" height="96"/>
+    <path d="M1030 735 L1100 805 L1030 875 L960 805 Z"/>
+    <path d="M912 96 V145" marker-end="url(#arrow)"/>
+    <path d="M845 180 C780 230 700 230 635 275" marker-end="url(#arrow)"/>
+    <path d="M912 199 V560 C912 650 895 685 605 727" marker-end="url(#arrow)"/>
+    <path d="M567 208 V245" marker-end="url(#arrow)"/>
+    <path d="M567 323 V357" marker-end="url(#arrow)"/>
+    <path d="M540 422 C515 445 485 448 485 480" marker-end="url(#arrow)"/>
+    <path d="M610 422 C705 450 735 545 735 620 C735 685 700 715 605 727" marker-end="url(#arrow)"/>
+    <path d="M420 540 C360 575 345 588 275 615" marker-end="url(#arrow)"/>
+    <path d="M275 623 C345 655 400 666 470 712" marker-end="url(#arrow)"/>
+    <path d="M470 749 C390 745 335 710 275 645" marker-end="url(#arrow)"/>
+    <path d="M470 755 C385 805 335 823 275 866" marker-end="url(#arrow)"/>
+    <path d="M275 878 C335 885 365 885 375 864" marker-end="url(#arrow)"/>
+    <path d="M275 892 C365 940 430 963 470 970 C520 970 535 935 567 903" marker-end="url(#arrow)"/>
+    <path d="M537 768 V818 C537 830 515 836 510 846" marker-end="url(#arrow)"/>
+    <path d="M537 768 C537 804 610 806 612 825" marker-end="url(#arrow)"/>
+    <path d="M605 748 C675 770 700 840 745 864" marker-end="url(#arrow)"/>
+    <path d="M605 736 C755 737 875 740 960 787" marker-end="url(#arrow)"/>
+    <path d="M1000 839 C965 880 900 912 812 930" marker-end="url(#arrow)"/>
+    <path d="M1060 839 C1070 885 1040 920 982 930" marker-end="url(#arrow)"/>
+    <path d="M745 978 C695 980 660 935 605 756" marker-end="url(#arrow)"/>
+    <path d="M1050 978 C1150 900 1160 240 980 172" marker-end="url(#arrow)"/>
+  </g>
+  <g fill="#000000" font-family="Arial, Helvetica, sans-serif" font-size="14" text-anchor="middle">
+    <text x="912" y="40"><tspan x="912">Traveler enters</tspan><tspan x="912" dy="17">dates, budget,</tspan><tspan x="912" dy="17">destinations and</tspan><tspan x="912" dy="17">interests</tspan></text>
+    <text x="912" y="168"><tspan x="912">Generate</tspan><tspan x="912" dy="17">recommendations</tspan></text>
+    <text x="567" y="153"><tspan x="567">Load travel data:</tspan><tspan x="567" dy="17">local CSVs or</tspan><tspan x="567" dy="17">production data</tspan><tspan x="567" dy="17">URL</tspan></text>
+    <text x="567" y="267"><tspan x="567">Match</tspan><tspan x="567" dy="17">preferences,</tspan><tspan x="567" dy="17">estimate costs and</tspan><tspan x="567" dy="17">rank itineraries</tspan></text>
+    <text x="567" y="380"><tspan x="567">Stream progress</tspan><tspan x="567" dy="17">and ranked</tspan><tspan x="567" dy="17">recommendations</tspan></text>
+    <text x="487" y="501"><tspan x="487">Recommendation</tspan><tspan x="487" dy="17">map</tspan><tspan x="487" dy="17">Compare and</tspan><tspan x="487" dy="17">select destinations</tspan></text>
+    <text x="207" y="613"><tspan x="207">Select another</tspan><tspan x="207" dy="17">recommendation</tspan><tspan x="207" dy="17">or plot type</tspan></text>
+    <text x="537" y="714"><tspan x="537">Daily travel price</tspan><tspan x="537" dy="17">comparison</tspan><tspan x="537" dy="17">Stacked bars ·</tspan><tspan x="537" dy="17">Lollipop · Treemap</tspan></text>
+    <text x="207" y="869"><tspan x="207">Open a day; edit or</tspan><tspan x="207" dy="17">remove eligible</tspan><tspan x="207" dy="17">prices</tspan></text>
+    <text x="442" y="849"><tspan x="442">Category colors</tspan><tspan x="442" dy="17">and legend</tspan><tspan x="442" dy="17">Identify what each</tspan><tspan x="442" dy="17">cost represents</tspan></text>
+    <text x="612" y="849"><tspan x="612">Budget summary</tspan><tspan x="612" dy="17">Total cost and %</tspan><tspan x="612" dy="17">of budget</tspan></text>
+    <text x="812" y="849"><tspan x="812">Day-detail modal</tspan><tspan x="812" dy="17">Selected day's</tspan><tspan x="812" dy="17">chart and itemized</tspan><tspan x="812" dy="17">costs</tspan></text>
+    <text x="812" y="950"><tspan x="812">Dates within</tspan><tspan x="812" dy="17">original trip:</tspan><tspan x="812" dy="17">keep</tspan><tspan x="812" dy="17">recommendations,</tspan><tspan x="812" dy="17">trim days</tspan></text>
+    <text x="982" y="950"><tspan x="982">Dates extend</tspan><tspan x="982" dy="17">beyond original</tspan><tspan x="982" dy="17">trip:</tspan><tspan x="982" dy="17">generate new</tspan><tspan x="982" dy="17">recommendations</tspan></text>
+    <text x="1030" y="792"><tspan x="1030">Change travel</tspan><tspan x="1030" dy="17">dates</tspan></text>
+  </g>
+  <text x="330" y="469" fill="#000000" font-family="Arial, Helvetica, sans-serif" font-size="14">Data visualization — primary user experience</text>
+</svg>
