@@ -48,10 +48,7 @@ export const INTERESTS = [
   ["Main event segments", "shapes"],
   ["Useful event genres", "music"],
   ["Classification subtype", "ticket"],
-  ["Event classification", "landmark"],
-  ["Other event filters", "sliders"],
   ["Heritage category", "castle"],
-  ["Heritage status", "shield-check"],
   ["Activities", "trees"],
   ["Heritage", "landmark"],
   ["Transportation", "car-front"],
@@ -82,8 +79,6 @@ export const RECOMMENDATION_FILTER_GROUPS: Record<
       options: [
         "Arts & Theatre",
         "Music",
-        "Miscellaneous",
-        "Undefined",
         "Sports",
         "Film",
       ],
@@ -154,31 +149,6 @@ export const RECOMMENDATION_FILTER_GROUPS: Record<
         "Transportation",
       ],
     },
-    {
-      label: "Event classification",
-      options: [
-        "Event Style",
-        "Venue Based",
-        "Group",
-        "Individual",
-        "Upsell",
-        "Transportation",
-        "Merchandise",
-        "Parking",
-      ],
-    },
-    {
-      label: "Other event filters",
-      options: [
-        "Festival",
-        "Price available",
-        "USD",
-        "CAD",
-        "2026",
-        "2025",
-        "2024",
-      ],
-    },
   ],
   "Travel Interest": [
     {
@@ -223,17 +193,6 @@ export const RECOMMENDATION_FILTER_GROUPS: Record<
     {
       label: "Heritage category",
       options: ["Cultural", "Natural", "Mixed"],
-    },
-    {
-      label: "Heritage status",
-      options: [
-        "In danger",
-        "Not in danger",
-        "Transboundary",
-        "Not transboundary",
-        "Entry fee verified",
-        "Entry fee not verified",
-      ],
     },
   ],
   "Additional Interests": [

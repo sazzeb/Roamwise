@@ -1,8 +1,7 @@
 
 export type BudgetMode =
   | "personal"
-  | "group-person"
-  | "group-total";
+  | "group-person";
 
 export type TravelStyle =
   | ""

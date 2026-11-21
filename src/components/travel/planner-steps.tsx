@@ -15,34 +15,64 @@ import {
   Building,
   Building2,
   CalendarDays,
+  CalendarClock,
+  CalendarOff,
+  CalendarX,
   CarFront,
   Castle,
   Check,
   ChevronDown,
+  CircleDollarSign,
+  CircleDot,
+  Clapperboard,
   Compass,
+  Drum,
+  FerrisWheel,
+  Film,
+  Flag,
+  Flower2,
+  Goal,
+  GraduationCap,
+  Guitar,
   Ellipsis,
+  Laugh,
   Heart,
   HeartPulse,
   Hotel as HotelIcon,
   House,
+  Image,
   Landmark,
   MapPin,
+  Medal,
+  MicVocal,
+  Music,
+  Music2,
+  Music3,
+  Music4,
   Moon,
   Mountain,
+  Palette,
   Palmtree,
   PartyPopper,
   Plane,
   Plus,
+  Sailboat,
   Search,
   Shapes,
   ShoppingBag,
+  Sparkles,
+  Speech,
+  Star,
+  TentTree,
   Tent,
   Ticket,
   Trees,
   Trophy,
+  Truck,
   Users,
   Utensils,
   Waves,
+  Wheat,
   type LucideIcon,
 } from "lucide-react";
 
@@ -108,6 +138,94 @@ const ICONS: Record<string, LucideIcon> = {
   plus: Plus,
 };
 
+const EVENT_FILTER_ICONS: Record<string, Record<string, LucideIcon>> = {
+  "Event status": {
+    onsale: CircleDollarSign,
+    offsale: CalendarOff,
+    cancelled: CalendarX,
+    rescheduled: CalendarClock,
+    postponed: CalendarDays,
+  },
+  "Main event segments": {
+    "Arts & Theatre": Palette,
+    Music,
+    Sports: Trophy,
+    Film,
+  },
+  "Useful event genres": {
+    Theatre: Ticket,
+    Rock: Guitar,
+    Comedy: Laugh,
+    Family: Users,
+    Pop: Star,
+    Cultural: Landmark,
+    "Fine Art": Image,
+    "Hip-Hop/Rap": MicVocal,
+    "Dance/Electronic": Sparkles,
+    Alternative: Music2,
+    Classical: Music3,
+    Folk: Flower2,
+    Jazz: Music4,
+    Metal: Drum,
+    Latin: PartyPopper,
+    Country: Wheat,
+    Soccer: Goal,
+    "Circus & Specialty Acts": FerrisWheel,
+    "R&B": Heart,
+    "Fairs & Festivals": TentTree,
+    Blues: Moon,
+    Reggae: Waves,
+    Football: Flag,
+    Basketball: CircleDot,
+    Boxing: Medal,
+    "Motorsports/Racing": CarFront,
+    Equestrian: Compass,
+    Opera: Speech,
+    "Food & Drink": Utensils,
+  },
+  "Classification subtype": {
+    Concert: Music,
+    Museum: Landmark,
+    "Touring Show/Production": Clapperboard,
+    Team: Users,
+    Exhibit: Image,
+    Festival: PartyPopper,
+    "Sightseeing/Facility": Compass,
+    Club: Moon,
+    Competition: Trophy,
+    Artist: Palette,
+    Musician: Guitar,
+    "Tribute Band": Star,
+    Band: Drum,
+    "Amusement Park": FerrisWheel,
+    Tour: MapPin,
+    Comedian: Laugh,
+    "Party/Gala": Sparkles,
+    "Singer/Vocalist": MicVocal,
+    "Lecture/Seminar": GraduationCap,
+    Expo: Building2,
+    Cruise: Sailboat,
+    Race: Flag,
+    Orchestra: Music3,
+    "Award Show": Medal,
+    "Meal Package": Utensils,
+    "Hotel Package": HotelIcon,
+    Transportation: Truck,
+  },
+};
+
+const FILTER_GROUP_ICONS: Record<string, LucideIcon> = {
+  "Event status": CalendarDays,
+  "Main event segments": Film,
+  "Useful event genres": Music,
+  "Classification subtype": Ticket,
+  Shopping: ShoppingBag,
+  "Culture and history": Castle,
+  "Activities and recreation": Trees,
+  "Preferable activities time": CalendarClock,
+  "Transportation and travel": Plane,
+};
+
 export type PlannerActions = {
   plan: TravelPlan;
   update: <K extends keyof TravelPlan>(
@@ -164,6 +282,7 @@ function SelectionGrid({
   columns = 3,
   imageByLabel,
   iconByLabel,
+  eventIcons,
 }: {
   options: readonly (readonly [string, string])[];
   selected: string[];
@@ -171,13 +290,14 @@ function SelectionGrid({
   columns?: number;
   imageByLabel?: Record<string, string>;
   iconByLabel?: Record<string, string>;
+  eventIcons?: Record<string, LucideIcon>;
 }) {
   return (
     <div
       className={`tile-grid cols-${columns}`}
     >
       {options.map(([label, icon]) => {
-        const Icon = ICONS[icon] || Shapes;
+        const Icon = eventIcons?.[label] || ICONS[icon] || Shapes;
         const active = selected.includes(label);
 
         return (
@@ -659,7 +779,6 @@ export function EstimatedBudget({
       1,
       plan.adults + plan.children
     ),
-    "group-total": 1,
   };
 
   const factor = modeFactor[plan.budgetMode];
@@ -741,8 +860,6 @@ export function EstimatedBudget({
     const mode =
       value === "Group · Per Person"
         ? "group-person"
-        : value === "Group · Entire Budget"
-        ? "group-total"
         : "personal";
 
     update("budgetMode", mode);
@@ -767,13 +884,11 @@ export function EstimatedBudget({
         items={[
           "Personal",
           "Group · Per Person",
-          "Group · Entire Budget",
         ]}
         value={
           {
             personal: "Personal",
             "group-person": "Group · Per Person",
-            "group-total": "Group · Entire Budget",
           }[plan.budgetMode]
         }
         onChange={selectBudgetMode}
@@ -883,9 +998,7 @@ export function EstimatedBudget({
         ) : (
         <div className="budget-field">
           <label htmlFor="trip-budget">
-            {plan.budgetMode === "personal"
-              ? "Personal budget (USD)"
-              : "Entire group budget (USD)"}
+            Personal budget (USD)
           </label>
 
           <div className="amount-controls">
@@ -1042,6 +1155,9 @@ export function RecommendationFilters({
         Math.max(0, selectedGroups.length - 1)
       )
     ];
+  const ActiveGroupIcon = activeGroup
+    ? FILTER_GROUP_ICONS[activeGroup.label]
+    : undefined;
 
   function openRecommendationGroup(index: number) {
     update("recommendationFilterIndex", index);
@@ -1111,7 +1227,11 @@ export function RecommendationFilters({
           >
             <div className="filter-category-heading">
               <span className="filter-category-icon">
-                ✦
+                {ActiveGroupIcon ? (
+                  <ActiveGroupIcon size={22} aria-hidden="true" />
+                ) : (
+                  "✦"
+                )}
               </span>
               <div>
                 <h2>{activeGroup.label}</h2>
@@ -1126,7 +1246,12 @@ export function RecommendationFilters({
               <SelectionGrid
                 options={activeGroup.options.map(
                   option =>
-                    [option, "shapes"] as const
+                    [
+                      option,
+                      activeGroup.label === "Shopping"
+                        ? "shopping-bag"
+                        : "shapes",
+                    ] as const
                 )}
                 selected={
                   plan.recommendationFilters[
@@ -1139,6 +1264,7 @@ export function RecommendationFilters({
                     value
                   )
                 }
+                eventIcons={EVENT_FILTER_ICONS[activeGroup.label]}
                 columns={3}
               />
             </div>

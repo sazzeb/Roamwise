@@ -108,6 +108,7 @@ function normalizePlan(
       value.budget,
       0
     ),
+    budgetMode: value.budgetMode === "group-person" ? "group-person" : "personal",
 
     adults,
     children,
