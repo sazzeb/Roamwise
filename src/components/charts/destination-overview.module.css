@@ -789,6 +789,19 @@
   border-bottom: 1px solid #e8edf1;
 }
 
+.selectableDay {
+  cursor: pointer;
+}
+
+.selectableDay:hover {
+  background: #f7fafb;
+}
+
+.selectableDay:focus-visible {
+  outline: 3px solid #123e71;
+  outline-offset: -3px;
+}
+
 .lollipopDay header {
   display: flex;
   justify-content: space-between;

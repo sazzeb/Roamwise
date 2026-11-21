@@ -102,31 +102,53 @@ function Stacked({ rows, onSelectDay }: { rows: Row[]; onSelectDay: (row: Row) =
     </article>)}
   </div></div>;
 }
-function Treemap({ rows }: { rows: Row[] }) {
+function Treemap({ rows, onSelectDay, fullNames = false }: {
+  rows: Row[]; onSelectDay?: (row: Row) => void; fullNames?: boolean;
+}) {
   const widths = rows.map(row => row.segments.map(segment =>
-    Math.max(104, Math.round(segment.amount / Math.max(1, row.total) * 650))));
+    Math.max(fullNames ? 140 : 104, Math.round(segment.amount / Math.max(1, row.total) * 650))));
   const chartWidth = Math.max(980, ...widths.map(items => items.reduce((sum, width) => sum + width, 260)));
   return <div className={styles.dailyScroll}><div style={{ minWidth: chartWidth }}>
     {rows.map((row, rowIndex) => <article className={styles.dailyDay} key={row.date}>
       <div className={styles.dailyChartRow}>
         <DayLabel row={row} />
-        <span className={styles.barTrack}><span className={styles.treemapTiles}
+        <span className={styles.barTrack}>{onSelectDay ? <button type="button" className={styles.stackButton}
+          aria-label={`View Day ${row.day} cost details for ${row.date}`}
+          onClick={() => onSelectDay(row)}><span className={styles.treemapTiles}
           style={{ width: widths[rowIndex].reduce((sum, width) => sum + width, 0) }}>
           {row.segments.map((segment, index) => <span
             className={styles.treemapTile} key={`${segment.name}-${index}`}
             style={{ width: widths[rowIndex][index], backgroundColor: segment.color }}
             title={`${segment.name}: ${money.format(segment.amount)}`}>
-            <span>{shortName(segment.name)}</span><strong>{money.format(segment.amount)}</strong>
+            <span>{fullNames ? segment.name : shortName(segment.name)}</span><strong>{money.format(segment.amount)}</strong>
           </span>)}
-        </span></span>
+        </span></button> : <span className={styles.treemapTiles}
+          style={{ width: widths[rowIndex].reduce((sum, width) => sum + width, 0) }}>
+          {row.segments.map((segment, index) => <span
+            className={styles.treemapTile} key={`${segment.name}-${index}`}
+            style={{ width: widths[rowIndex][index], backgroundColor: segment.color }}
+            title={`${segment.name}: ${money.format(segment.amount)}`}>
+            <span>{fullNames ? segment.name : shortName(segment.name)}</span><strong>{money.format(segment.amount)}</strong>
+          </span>)}
+        </span>}</span>
         <strong className={styles.totalLabel}>{money.format(row.total)}</strong>
       </div>
     </article>)}
   </div></div>;
 }
-function Lollipop({ rows }: { rows: Row[] }) {
+function Lollipop({ rows, onSelectDay }: { rows: Row[]; onSelectDay?: (row: Row) => void }) {
   const maximum = Math.max(1, ...rows.flatMap(row => row.segments.map(segment => segment.amount)));
-  return <div className={styles.dailyScroll}>{rows.map(row => <article className={styles.lollipopDay} key={row.date}>
+  return <div className={styles.dailyScroll}>{rows.map(row => <article
+    className={`${styles.lollipopDay} ${onSelectDay ? styles.selectableDay : ""}`} key={row.date}
+    role={onSelectDay ? "button" : undefined} tabIndex={onSelectDay ? 0 : undefined}
+    aria-label={onSelectDay ? `View Day ${row.day} cost details for ${row.date}` : undefined}
+    onClick={onSelectDay ? () => onSelectDay(row) : undefined}
+    onKeyDown={onSelectDay ? event => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        onSelectDay(row);
+      }
+    } : undefined}>
     <header><DayLabel row={row} /><strong>{money.format(row.total)}</strong></header>
     {row.segments.map((segment, index) => <div className={styles.lollipopRow} key={`${segment.name}-${index}`}>
       <span title={segment.name}>{segment.name}</span>
@@ -312,8 +334,8 @@ export function DailyTravelPriceChart({ recommendations, accommodationId, select
     </div>}
     <div className={styles.plotBody}>
       {plot === "stacked" && <Stacked rows={displayedRows} onSelectDay={openDay} />}
-      {plot === "treemap" && <Treemap rows={displayedRows} />}
-      {plot === "lollipop" && <Lollipop rows={displayedRows} />}
+      {plot === "treemap" && <Treemap rows={displayedRows} onSelectDay={openDay} />}
+      {plot === "lollipop" && <Lollipop rows={displayedRows} onSelectDay={openDay} />}
     </div>
     <dialog ref={dialogRef} className={styles.dayDialog} onClose={() => setSelectedDay(null)}
       onClick={event => {
@@ -334,7 +356,7 @@ export function DailyTravelPriceChart({ recommendations, accommodationId, select
               <span>{name}</span>
             </li>)}
           </ul>
-          <div className={styles.dayDialogStackScroll}>
+          {plot === "stacked" && <div className={styles.dayDialogStackScroll}>
             <div className={styles.dayDialogStack} role="img"
               aria-label={`Day ${selectedDayRow.day} stacked recommendations: ${selectedDayRow.segments.map(segment => `${segment.name} ${money.format(segment.amount)}`).join(", ")}`}>
               {selectedDayRow.segments.map(segment => <span key={segment.id}
@@ -345,7 +367,9 @@ export function DailyTravelPriceChart({ recommendations, accommodationId, select
                 <strong>{money.format(segment.amount)}</strong>
               </span>)}
             </div>
-          </div>
+          </div>}
+          {plot === "treemap" && <Treemap rows={[selectedDayRow]} fullNames />}
+          {plot === "lollipop" && <Lollipop rows={[selectedDayRow]} />}
         </div>
         <ul className={styles.dayDialogList}>
           {selectedDayRow.segments.map(segment => <li key={segment.id}>
