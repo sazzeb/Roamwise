@@ -41,27 +41,34 @@ the browser uses it.
 The Blob storage path retains the legacy `travelwise-v1` prefix so existing
 uploaded datasets and `TRAVEL_DATA_BASE_URL` continue to work after the rename.
 
-1. Create a **public** Vercel Blob store and connect it to this project.
-2. Install and sign in to the Vercel CLI, then link this repository with
+1. Use one Vercel project for the Next.js app at the repository root. If you
+   already have a deployed project, open that project's **Settings → Git** and
+   connect `sazzeb/Roamwise` there; do not import another project. Set its
+   production branch to `main` and its Root Directory to the repository root.
+   The `api/` Python package is a local CLI, not a second Vercel app.
+2. Create a **public** Vercel Blob store and connect it to that project.
+3. Install and sign in to the Vercel CLI, then link this repository with
    `vercel link`. Select the same project to which the public Blob store is
    connected. Run `vercel env pull .env.local`, then verify credentials with
    `vercel blob list --limit 1`. If this reports missing credentials, connect
    the store to the project and its Development environment in the Vercel
    dashboard, then pull the environment again. `.env.local` is gitignored;
    do not share its credentials.
-3. From the project root, run
+4. From the project root, run
    `bash scripts/upload-datasets-to-vercel-blob.sh`. This uploads gzip copies
    under `travelwise-v1/csv_file/`. The raw local CSV files are unchanged.
-4. Copy the public Blob URL printed for one uploaded file. Remove its filename
+5. Copy the public Blob URL printed for one uploaded file. Remove its filename
    and trailing slash. For example, if the file URL is
    `https://STORE.public.blob.vercel-storage.com/travelwise-v1/csv_file/ES_Spain.csv.gz`,
    set `TRAVEL_DATA_BASE_URL` to
    `https://STORE.public.blob.vercel-storage.com/travelwise-v1/csv_file`.
    Add this **server-side** environment variable for every Vercel environment
    where recommendations must work. Do not prefix it with `NEXT_PUBLIC_`.
-5. Push the repository to GitHub. Import it at [vercel.com/new](https://vercel.com/new),
-   select the folder containing `package.json` as the root, and use the Next.js
-   framework preset. Deploy and test a full recommendation request.
+6. Push the repository to GitHub. With the existing Vercel project connected
+   to `main`, that push starts its deployment. Test a full recommendation
+   request after the deployment is ready. If there is no existing project,
+   import `sazzeb/Roamwise` once with the Next.js framework preset and the
+   repository root as its Root Directory.
 
 If the dataset changes, upload it under a new prefix and update
 `TRAVEL_DATA_BASE_URL` to that version; immutable paths avoid stale Blob
